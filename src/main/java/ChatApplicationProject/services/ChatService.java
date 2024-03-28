@@ -1,7 +1,7 @@
 package ChatApplicationProject.services;
 
 import ChatApplicationProject.Models.Chat;
-import ChatApplicationProject.Models.User;
+import ChatApplicationProject.requestDto.GroupChatRequest;
 
 import java.util.List;
 
@@ -11,11 +11,12 @@ public interface ChatService {
 
     public Chat findChatByName(String name) ;
 
-    public List<Chat> findAllChatByUserid(Integer userid);
+    public List<Chat> findAllChatByUserid(Integer userId);
 
-    public Chat createGroup(String name, List<User> usersList) ;
+    public Chat createGroup(GroupChatRequest groupChatRequest) ;
 
-    public Chat addMemberToGroup(Integer userid, Integer chatid) ;
+
+    public Chat addMemberToGroup(List<Integer> userid, Integer chatid) ;
 
     public Chat findChatById(Integer chatId);
 }

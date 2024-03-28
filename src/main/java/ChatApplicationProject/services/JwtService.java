@@ -3,6 +3,8 @@ package ChatApplicationProject.services;
 import ChatApplicationProject.Configuration.MyConfig;
 import ChatApplicationProject.Models.JwtRequest;
 import ChatApplicationProject.Models.JwtResponse;
+import ChatApplicationProject.Models.User;
+import ChatApplicationProject.requestDto.UserRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,16 +12,13 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.internal.Function;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -96,11 +95,34 @@ public class JwtService {
 
         UserDetails userDetails = userServiceImpl.loadUserByUsername(jwtRequest.getUsername());
         String token = this.getToken(userDetails);
-        token = "Bearer " + token;
+
+        User user=userServiceImpl.findByUsername(jwtRequest.getUsername());
 
         JwtResponse response = JwtResponse.builder()
-                .jwtToken(token)
-                .userName(userDetails.getUsername()).build();
+                .token(token)
+                .name(user.getName())
+                .id(user.getId())
+                .username(user.getUsername())
+                .imageurl(user.getImageurl())
+                .ChatIdList(user.getChatIdList())
+                .creationDate(user.getCreationDate())
+                 .build();
+        return response;
+    }
+
+    public JwtResponse register(UserRequest userRequest) throws Exception {
+      User newUser= userServiceImpl.register(userRequest);
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(newUser.getUsername());
+        String token = this.getToken(userDetails);
+        JwtResponse response = JwtResponse.builder()
+                .token(token)
+                .name(newUser.getName())
+                .id(newUser.getId())
+                .username(newUser.getUsername())
+                .imageurl(newUser.getImageurl())
+                .ChatIdList(newUser.getChatIdList())
+                .creationDate(newUser.getCreationDate())
+                .build();
         return response;
     }
 }

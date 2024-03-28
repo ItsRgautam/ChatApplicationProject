@@ -19,7 +19,7 @@ public class JwtAutheticationEntryPoint implements AuthenticationEntryPoint {
     {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter writer = response.getWriter();
-        writer.println("Access Denied nhi milega access !! " + authException.getMessage());
+        writer.println("Access Denied  !! " + authException.getMessage());
     }
 
 }

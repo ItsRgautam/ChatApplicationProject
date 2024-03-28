@@ -1,12 +1,14 @@
 package ChatApplicationProject.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @ToString
 @Getter
@@ -26,9 +28,11 @@ public class User implements UserDetails {
 
     private String password;
 
-    private List<Integer> ChatIdList;
-
+    private Set<Integer> chatIdList=new HashSet<>();
     private String imageurl;
+
+    @CreationTimestamp
+    private LocalDateTime creationDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,5 +1,6 @@
 package ChatApplicationProject.Models;
 
+import ChatApplicationProject.Configuration.AesEncryptor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,10 +18,13 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Convert(converter = AesEncryptor.class)
     private String content;
 
     @ManyToOne
     private User user;
+
+    private String username;
 
     @ManyToOne
     @JoinColumn
