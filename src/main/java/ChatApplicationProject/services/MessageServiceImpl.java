@@ -40,7 +40,6 @@ public class MessageServiceImpl implements MessageService {
             Message message=messageRepository.save(newMessage);
             chat.setLatestMessage(message);
             chatRepository.save(chat);
-
         return message;
         }
 

@@ -1,6 +1,7 @@
 package ChatApplicationProject.Controller;
 
 import ChatApplicationProject.Models.Chat;
+import ChatApplicationProject.Models.User;
 import ChatApplicationProject.requestDto.GroupChatRequest;
 import ChatApplicationProject.services.ChatService;
 import ChatApplicationProject.services.UserServiceImpl;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class ChatController {
@@ -30,6 +32,11 @@ public class ChatController {
     public ResponseEntity<Chat> findChatById(@RequestParam Integer chatId, @RequestHeader("Authorization") String token){
         return new ResponseEntity<>(chatService.findChatById(chatId),HttpStatus.CREATED);
     }
+    @GetMapping("/chat/users")
+    public ResponseEntity<Set<User>> findUsersByChatId(@RequestParam Integer chatId, @RequestHeader("Authorization") String token){
+        return new ResponseEntity<>(chatService.findUserByChatId(chatId),HttpStatus.OK);
+    }
+
     @PostMapping(value = "chat/creategroup", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<Chat> createGroup(@RequestBody GroupChatRequest groupChatRequest, @RequestHeader("Authorization") String token){

@@ -37,6 +37,7 @@ public class AesEncryptor  implements AttributeConverter<Object,String> {
     }
 
     private void initCipher(int encryptMode) throws GeneralSecurityException {
+        //initialize cipher into memory
         getCipher().init(encryptMode, getKey());
     }
 

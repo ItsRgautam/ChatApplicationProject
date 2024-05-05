@@ -46,8 +46,16 @@ public class ChatServiceImpl implements ChatService {
     }
 
     public Chat findChatById(Integer chatId){
+    	
        Optional<Chat> chat= chatRepository.findById(chatId);
+     //  System.out.println("chat0"+chat);
        return chat.get();
+    }
+    public Set<User> findUserByChatId(Integer chatId){
+
+        Optional<Chat> chat= chatRepository.findById(chatId);
+        //  System.out.println("chat0"+chat);
+        return chat.get().getUsers();
     }
 
     @Override

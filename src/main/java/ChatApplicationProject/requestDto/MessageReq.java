@@ -1,20 +1,23 @@
 package ChatApplicationProject.requestDto;
 
+import ChatApplicationProject.Models.Message;
+import ChatApplicationProject.Models.User;
+import lombok.*;
+
+import java.util.Set;
+
+@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MessageReq {
-    private String text;
+    private Message message;
 
-    private String to;
+    private Integer chatId;
 
-    public String getText() {
-        return text;
-    }
 
-    public String getTo() {
-        return to;
-    }
 
-    public void setTo(String to) {
-        this.to = to;
-    }
+
 
 }
