@@ -1,8 +1,10 @@
+
 package ChatApplicationProject.Controller;
 
 import ChatApplicationProject.Models.Chat;
 import ChatApplicationProject.Models.User;
 import ChatApplicationProject.requestDto.GroupChatRequest;
+import ChatApplicationProject.requestDto.UpdateGroupRequest;
 import ChatApplicationProject.services.ChatService;
 import ChatApplicationProject.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ public class ChatController {
 
     @PostMapping(value = "chat/creategroup", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<Chat> createGroup(@RequestBody GroupChatRequest groupChatRequest, @RequestHeader("Authorization") String token){
+    public ResponseEntity<Chat> createGroup(@RequestBody GroupChatRequest groupChatRequest, @RequestHeader("Authorization") String token){
 
 
         return new ResponseEntity<>(chatService.createGroup(groupChatRequest),HttpStatus.CREATED);
@@ -49,4 +51,30 @@ public class ChatController {
     public ResponseEntity<List<Chat>> myChats( @RequestParam Integer userId,@RequestHeader("Authorization") String token){
         return new ResponseEntity<>(chatService.findAllChatByUserid(userId),HttpStatus.OK);
     }
+
+    @PutMapping("/chat/removefromgroup")
+    public ResponseEntity<Chat> leaveGroup(@RequestBody UpdateGroupRequest updateGroupRequest){
+
+        return new ResponseEntity<>(chatService.leaveGroup(updateGroupRequest),HttpStatus.CREATED);
+    }
+    @PutMapping("/chat/addtogroup")
+    public ResponseEntity<Chat> addToGroup(@RequestBody UpdateGroupRequest updateGroupRequest){
+        System.out.println("Inside leage groprrfkgn++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        return new ResponseEntity<>(chatService.addMemberToGroup(updateGroupRequest),HttpStatus.CREATED);
+    }
+    @PutMapping("/chat/renamegroup")
+    public ResponseEntity<Chat> renameGroup(@RequestBody UpdateGroupRequest updateGroupRequest){
+        System.out.println("Inside leage groprrfkgn++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        return new ResponseEntity<>(chatService.renameGroup(updateGroupRequest),HttpStatus.CREATED);
+    }
+    @PutMapping("/chat/makeadmin")
+    public ResponseEntity<Chat> makeAdmin(@RequestBody UpdateGroupRequest updateGroupRequest){
+        System.out.println("Inside leage groprrfkgn++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        return new ResponseEntity<>(chatService.makeAdmin(updateGroupRequest),HttpStatus.CREATED);
+    }
+
+
 }

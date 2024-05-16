@@ -59,4 +59,10 @@ public class UserServiceImpl implements UserDetailsService,UserService {
     public List<User> fetchAllUsers() {
         return userRepository.findAll();
     }
+
+    public User updateUserImage(Integer userId, String imageurl) {
+        User user=this.findById(userId);
+        user.setImageurl(imageurl);
+       return userRepository.save(user);
+    }
 }

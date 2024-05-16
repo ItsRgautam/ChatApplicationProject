@@ -1,9 +1,11 @@
+
 package ChatApplicationProject.services;
 
 import ChatApplicationProject.Models.Chat;
 import ChatApplicationProject.Models.User;
 import ChatApplicationProject.repository.ChatRepository;
 import ChatApplicationProject.requestDto.GroupChatRequest;
+import ChatApplicationProject.requestDto.UpdateGroupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,15 +43,15 @@ public class ChatServiceImpl implements ChatService {
             userService.save(user2);
 
             return newChat;
-         }
+        }
         return chatExists;
     }
 
     public Chat findChatById(Integer chatId){
-    	
-       Optional<Chat> chat= chatRepository.findById(chatId);
-     //  System.out.println("chat0"+chat);
-       return chat.get();
+
+        Optional<Chat> chat= chatRepository.findById(chatId);
+        //  System.out.println("chat0"+chat);
+        return chat.get();
     }
     public Set<User> findUserByChatId(Integer chatId){
 
@@ -85,29 +87,29 @@ public class ChatServiceImpl implements ChatService {
             return chats;
         }
         catch (Exception e){
-             return null;
+            return null;
         }
     }
 
     @Override
     public Chat createGroup(GroupChatRequest groupChatRequest) {
-       Chat chat=new Chat();
+        Chat chat=new Chat();
 
-      chat.setChatname(groupChatRequest.getGroupChatName());
+        chat.setChatname(groupChatRequest.getGroupChatName());
         System.out.println("creating groupchat name:"+groupChatRequest.getGroupChatName());
-       Chat newGroupChat=chatRepository.save(chat);
+        Chat newGroupChat=chatRepository.save(chat);
 
-       Set<User> listUser= newGroupChat.getUsers();
+        Set<User> listUser= newGroupChat.getUsers();
 
 
-       List<Integer> userid= groupChatRequest.getUserIds();
+        List<Integer> userid= groupChatRequest.getUserIds();
         System.out.println("user list"+groupChatRequest.getUserIds().toString());
 
         Iterator<Integer> iterator=userid.iterator();
         while (iterator.hasNext()){
-           Integer i= iterator.next();
-           User user=userService.findById(i);
-           listUser.add(user);
+            Integer i= iterator.next();
+            User user=userService.findById(i);
+            listUser.add(user);
             System.out.println("user adder---->>>>"+user.getUsername());
             Set<Integer> chatlist=user.getChatIdList();
             chatlist.add(newGroupChat.getId());
@@ -124,30 +126,87 @@ public class ChatServiceImpl implements ChatService {
         listAdmin.add(userService.getUser().getId());
 
         newGroupChat.setAdmins(listAdmin);
-      User modifiedUser= userService.getUser();
-      modifiedUser.getChatIdList().add(newGroupChat.getId());
-      userService.save(modifiedUser);
+        User modifiedUser= userService.getUser();
+        modifiedUser.getChatIdList().add(newGroupChat.getId());
+        userService.save(modifiedUser);
 
 
         System.out.println("group chat created"+newGroupChat.toString());
-      return chatRepository.save(newGroupChat);
+        return chatRepository.save(newGroupChat);
     }
 
     @Override
-    public Chat addMemberToGroup(List<Integer> userid, Integer chatid)  {
+    public Chat addMemberToGroup(UpdateGroupRequest updateGroupRequest)  {
+
+
 
         Integer loggedUser=userService.getUser().getId();
-        Chat chat=this.findChatById(chatid);
+        Chat chat=this.findChatById(updateGroupRequest.getChatId());
         Set<Integer> admins=chat.getAdmins();
+        User user=userService.findById(updateGroupRequest.getUserId());
+        if(admins.contains(loggedUser)){
+            //add user to chat
+            Set<User> users=chat.getUsers();
+            users.add(userService.findById(updateGroupRequest.getUserId()));
+            chat.setUsers(users);
 
-         if(admins.contains(loggedUser)){
-             Set<User> users=chat.getUsers();
-           //add users to the chat
+            //add chatid to user's chatidlist
+            Set<Integer> chatlist=user.getChatIdList();
+            chatlist.add(chat.getId());
+            user.setChatIdList(chatlist);
+            userService.save(user);
 
-            return chat;
+
+            return chatRepository.save(chat);
         }
         else {
             throw new RuntimeException("you are not a admin");
         }
+    }
+
+    @Override
+    public Chat leaveGroup(UpdateGroupRequest updateGroupRequest){
+
+        User user=userService.findById(updateGroupRequest.getUserId());
+
+        Chat chat=this.findChatById(updateGroupRequest.getChatId());
+        Set<User> users =chat.getUsers();
+        users.remove(user);
+        Set<Integer> admins=chat.getAdmins();
+        admins.remove(user.getId());
+        chat.setAdmins(admins);
+        chat.setUsers(users);
+        Set<Integer> chatsIds=user.getChatIdList();
+        chatsIds.remove(updateGroupRequest.getChatId());
+
+        user.setChatIdList(chatsIds);
+        userService.save(user);
+        return chatRepository.save(chat);
+
+    }
+
+    @Override
+    public Chat renameGroup(UpdateGroupRequest updateGroupRequest) {
+        Chat chat=this.findChatById(updateGroupRequest.getChatId());
+      //  System.out.println(updateGroupRequest.getGroupChatName()+"iusbdfyuvwbesldufbliwuesbdfulvjds+++++++++++++++++++++++++++++");
+        chat.setChatname(updateGroupRequest.getGroupChatName());
+
+        return  chatRepository.save(chat);
+
+    }
+
+    @Override
+    public Chat makeAdmin(UpdateGroupRequest updateGroupRequest) {
+        Chat chat=this.findChatById(updateGroupRequest.getChatId());
+        User user=userService.findById(updateGroupRequest.getUserId());
+        Set<User> users=chat.getUsers();
+        if(users.contains(user))
+        {
+            Set<Integer> newadmins=chat.getAdmins();
+            newadmins.add(user.getId());
+            chat.setAdmins(newadmins);
+        }
+        return chatRepository.save(chat);
+
     }
 }

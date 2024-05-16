@@ -1,6 +1,7 @@
 package ChatApplicationProject.Controller;
 
 import ChatApplicationProject.Models.User;
+import ChatApplicationProject.requestDto.UpdatePicture;
 import ChatApplicationProject.requestDto.UserRequest;
 import ChatApplicationProject.services.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -37,5 +38,11 @@ public class UserController {
         return  new ResponseEntity<>(userServiceImpl.fetchAllUsers(),HttpStatus.OK);
     }
 
+    @PutMapping("/update-user/picture/")
+    public ResponseEntity<User> updateUserImage(@RequestBody UpdatePicture updatePicture ){
+
+
+        return  new ResponseEntity<>(userServiceImpl.updateUserImage(updatePicture.getUserid(),updatePicture.getImageurl()),HttpStatus.OK);
+    }
 
 }

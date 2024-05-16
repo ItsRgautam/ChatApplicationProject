@@ -3,6 +3,7 @@ package ChatApplicationProject.services;
 import ChatApplicationProject.Models.Chat;
 import ChatApplicationProject.Models.User;
 import ChatApplicationProject.requestDto.GroupChatRequest;
+import ChatApplicationProject.requestDto.UpdateGroupRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,13 @@ public interface ChatService {
     public Chat createGroup(GroupChatRequest groupChatRequest) ;
 
 
-    public Chat addMemberToGroup(List<Integer> userid, Integer chatid) ;
+    public Chat addMemberToGroup(UpdateGroupRequest updateGroupRequest) ;
 
     public Chat findChatById(Integer chatId);
+
+    public Chat leaveGroup(UpdateGroupRequest updateGroupRequest);
+
+    public Chat renameGroup(UpdateGroupRequest updateGroupRequest);
+
+    public  Chat makeAdmin(UpdateGroupRequest updateGroupRequest);
 }
