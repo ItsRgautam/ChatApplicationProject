@@ -17,12 +17,15 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://chatapplicationproject-production.up.railway.app")
+                        .allowedOrigins("http://localhost:3000","https://connectify-silk.vercel.app")
                         .allowedMethods(HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
-                                HttpMethod.DELETE.name())
+                                HttpMethod.DELETE.name(),
+                                HttpMethod.PUT.name()
+                        )
                         .allowedHeaders(HttpHeaders.CONTENT_TYPE,
-                                HttpHeaders.AUTHORIZATION);
+                                HttpHeaders.AUTHORIZATION,
+                                HttpHeaders.ACCEPT);
             }
         };
     }
